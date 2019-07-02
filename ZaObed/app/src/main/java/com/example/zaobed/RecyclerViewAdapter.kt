@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.zaobed.model.response.Order
 import kotlinx.android.synthetic.main.recycler_view_order.view.*
 
 class RecyclerViewAdapter(private val orderList: ArrayList<Order>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

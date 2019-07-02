@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.zaobed.Order
+import com.example.zaobed.model.response.Order
 import com.example.zaobed.R
 import com.example.zaobed.RecyclerViewAdapter
 
