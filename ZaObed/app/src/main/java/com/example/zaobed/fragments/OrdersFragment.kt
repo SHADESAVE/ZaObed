@@ -2,6 +2,7 @@ package com.example.zaobed.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,13 +12,22 @@ import com.example.zaobed.Order
 import com.example.zaobed.R
 import com.example.zaobed.RecyclerViewAdapter
 
-class OrdersFragment: Fragment() {
+
+
+class OrdersFragment: Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_orders, container, false)
 
         val fab: View = view.findViewById(R.id.fab)
+
+        val recyclerView: RecyclerView = view.findViewById(R.id.order_recycler_view) as RecyclerView
+        recyclerView.setHasFixedSize(true)
+
+        val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_container)
+        swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_dark)
+
         fab.setOnClickListener { view ->
             activity!!.supportFragmentManager.beginTransaction().replace(
                 R.id.fragment_container,
@@ -25,8 +35,11 @@ class OrdersFragment: Fragment() {
             ).addToBackStack(null).commit()
         }
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.order_recycler_view) as RecyclerView
-        recyclerView.setHasFixedSize(true)
+        swipeRefresh.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            //Обработчик
+            //
+            swipeRefresh.setRefreshing(false)
+        })
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -43,6 +56,7 @@ class OrdersFragment: Fragment() {
         })
 
         //результат метода GET ORDER с сервера будем записывать в OrderList
+        //
         val orderList = arrayListOf<Order>()
         for (i in 0..20)
             orderList.add(
@@ -54,18 +68,6 @@ class OrdersFragment: Fragment() {
                 )
             )
         //
-
-        val bundle: Bundle? = this.arguments
-        if (bundle != null) {
-            orderList.add(
-                Order(
-                    bundle.getString("name"),
-                    bundle.getString("description") + " " + bundle.getString("value"),
-                    "13:10 12.11.2019",
-                    "В обработке"
-                )
-            )
-        }
         
         val recyclerViewAdapter = RecyclerViewAdapter(orderList)
         recyclerView.adapter = recyclerViewAdapter
@@ -74,5 +76,9 @@ class OrdersFragment: Fragment() {
         recyclerView.layoutManager = layoutManager
 
         return view
+    }
+
+    private fun onScrollListener() {
+
     }
 }

@@ -19,15 +19,16 @@ class RequestFragment: Fragment(), AdapterView.OnItemSelectedListener, View.OnCl
         val view = inflater.inflate(R.layout.fragment_request, container, false)
 
         val button: Button = view.findViewById(R.id.buttonSend)
-        button.setOnClickListener(this)
+
 
         val spinner: Spinner = view.findViewById(R.id.spinner)
         val itemList = arrayOf("Поставщик Василий", "Поставщик Виталий", "Поставщик Володя")
 
+        button.setOnClickListener(this)
+
         spinner.setOnItemSelectedListener(this)
 
         val arrayAdapter = ArrayAdapter(context!!, R.layout.spinner_item, itemList)
-
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
