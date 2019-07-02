@@ -2,6 +2,7 @@ package com.example.zaobed
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.zaobed.fragments.OrdersFragment
 
 class MainActivity : AppCompatActivity() {
 
