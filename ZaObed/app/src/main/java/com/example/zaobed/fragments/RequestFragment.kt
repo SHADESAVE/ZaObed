@@ -8,62 +8,88 @@ import android.view.ViewGroup
 import android.support.v7.app.AppCompatActivity
 import android.widget.*
 import com.example.zaobed.R
+import com.example.zaobed.model.response.OrderDada
+import com.example.zaobed.presenter.OrdersPresenter
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
-class RequestFragment: Fragment(), AdapterView.OnItemSelectedListener, View.OnClickListener {
+class RequestFragment: Fragment(){
 
     var name: String = ""
+
+    val presenter = OrdersPresenter()
+
+
+//    override fun onStart() {
+//        super.onStart()
+//        presenter.bindView(this, context!!)
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        presenter.unbindView()
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_request, container, false)
-
         val button: Button = view.findViewById(R.id.buttonSend)
-
-
         val spinner: Spinner = view.findViewById(R.id.spinner)
+
         val itemList = arrayOf("Поставщик Василий", "Поставщик Виталий", "Поставщик Володя")
-
-        button.setOnClickListener(this)
-
-        spinner.setOnItemSelectedListener(this)
-
         val arrayAdapter = ArrayAdapter(context!!, R.layout.spinner_item, itemList)
-
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
         spinner.adapter = arrayAdapter
+
+        button.setOnClickListener{
+
+            val productsList: List<OrderDada> = listOf(
+                OrderDada("Морковка", 20, ""),
+                OrderDada("Капуста", 20, ""),
+                OrderDada("Горох", 2000, ""),
+                OrderDada("Свекла", 20, "")
+            )
+
+            val sdf = SimpleDateFormat("hh:mm: dd/mm/yyyy", Locale.ENGLISH)
+            val currentDate = sdf.format(Date())
+
+            val json = JSONObject()
+            json.put("name", name)
+            json.put("date", currentDate)
+            json.put("status", "В обработке")
+            json.put("products", productsList)
+
+            val presenter = OrdersPresenter()
+            presenter.postOrder(json, context!!)
+
+            val ordersFragment = OrdersFragment()
+            val activity = view.context as AppCompatActivity
+
+
+            activity.getSupportFragmentManager().beginTransaction().replace(
+                R.id.fragment_container,
+                ordersFragment
+            ).addToBackStack(null).commit()
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(arg0: AdapterView<*>, arg1: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> name = itemList[0]
+                    1 -> name = itemList[1]
+                    2 -> name = itemList[2]
+                }
+            }
+
+            override fun onNothingSelected(arg0: AdapterView<*>) {
+            }
+        }
 
         return view
     }
 
 
-    override fun onClick(v: View?) {
-
-        val editText1: EditText = view!!.findViewById(R.id.editText1)
-        val editText2: EditText = view!!.findViewById(R.id.editText2)
-
-        val ordersFragment = OrdersFragment()
-        val activity = view!!.context as AppCompatActivity
-
-        //Функция отправки
-        //на сервер
-
-        activity.getSupportFragmentManager().beginTransaction().replace(
-            R.id.fragment_container,
-            ordersFragment
-        ).addToBackStack(null).commit()
-
-    }
-
-    override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
-        // use position to know the selected item
-        when (position) {
-            0 -> name = "Поставщик Василий"
-            1 -> name = "Поставщик Виталий"
-            2 -> name = "Поставщик Володя"
-        }
-    }
-    override fun onNothingSelected(arg0: AdapterView<*>) {
-    }
 }

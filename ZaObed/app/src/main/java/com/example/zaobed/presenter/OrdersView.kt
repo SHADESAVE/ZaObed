@@ -1,5 +1,7 @@
 package com.example.zaobed.presenter
 
-interface OrdersView {
+import com.example.zaobed.model.response.OrdersData
 
+interface OrdersView {
+    fun showOrders(ordersList: List<OrdersData>)
 }
