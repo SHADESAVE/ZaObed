@@ -4,6 +4,6 @@ import com.example.zaobed.model.response.GetTestData
 import com.example.zaobed.model.response.OrdersData
 
 interface OrdersView {
-    //fun showOrders(ordersList: List<OrdersData>)
-    fun showOrders2(ordersList: List<GetTestData>)
+    fun showOrders(ordersList: List<GetTestData>)
+    fun changeFragment()
 }

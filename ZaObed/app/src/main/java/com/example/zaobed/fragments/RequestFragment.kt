@@ -8,16 +8,13 @@ import android.view.ViewGroup
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.widget.*
-import com.example.zaobed.MainActivity
+import com.example.zaobed.activity.MainActivity
 import com.example.zaobed.R
 import com.example.zaobed.model.response.OrderDada
 import com.example.zaobed.presenter.OrdersPresenter
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
-
-
 
 
 class RequestFragment: Fragment(){
@@ -59,12 +56,12 @@ class RequestFragment: Fragment(){
 
         button.setOnClickListener{
 
-            val productsList: List<OrderDada> = listOf(
-                OrderDada("Морковка", 20, ""),
-                OrderDada("Капуста", 20, ""),
-                OrderDada("Горох", 2000, ""),
-                OrderDada("Свекла", 20, "")
-            )
+//            val productsList: List<OrderDada> = listOf(
+//                OrderDada("Морковка", 20, ""),
+//                OrderDada("Капуста", 20, ""),
+//                OrderDada("Горох", 2000, ""),
+//                OrderDada("Свекла", 20, "")
+//            )
 
             val sdf = SimpleDateFormat("hh:mm: dd/mm/yyyy", Locale.ENGLISH)
             val currentDate = sdf.format(Date())
@@ -73,10 +70,10 @@ class RequestFragment: Fragment(){
             json.put("name", name)
             json.put("date", currentDate)
             json.put("status", "В обработке")
-            json.put("products", productsList)
+            //json.put("products", productsList)
 
             val presenter = OrdersPresenter()
-            presenter.postOrder(json, context!!)
+            //presenter.postOrder(json, context!!)
 
             val ordersFragment = OrdersFragment()
             val activity = view.context as AppCompatActivity

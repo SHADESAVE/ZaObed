@@ -1,4 +1,4 @@
-package com.example.zaobed
+package com.example.zaobed.presenter
 
 import com.example.zaobed.model.api.Api
 import retrofit2.Retrofit
