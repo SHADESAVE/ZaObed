@@ -31,7 +31,7 @@ class CreateOrderFragment: Fragment(), AdapterView.OnItemSelectedListener{
         recyclerView.adapter = adapter
 
         val spinner: Spinner = view.findViewById(R.id.spinner2)
-        val itemList = arrayOf("Поставщик Василий", "Поставщик Виталий", "Поставщик Володя")
+        val itemList = arrayOf("Василий", "Виталий", "Володя")
 
         button.setOnClickListener{
             val itemName = editText.text
@@ -66,9 +66,9 @@ class CreateOrderFragment: Fragment(), AdapterView.OnItemSelectedListener{
     override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
         // use position to know the selected item
         when (position) {
-            0 -> name = "Поставщик Василий"
-            1 -> name = "Поставщик Виталий"
-            2 -> name = "Поставщик Володя"
+            0 -> name = "Василий"
+            1 -> name = "Виталий"
+            2 -> name = "Володя"
         }
     }
     override fun onNothingSelected(arg0: AdapterView<*>) {
