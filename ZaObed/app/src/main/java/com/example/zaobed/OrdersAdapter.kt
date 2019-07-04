@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.zaobed.model.response.GetTestData
 import com.example.zaobed.model.response.OrderDada
 import com.example.zaobed.model.response.OrdersData
 import kotlinx.android.synthetic.main.recycler_view_order.view.*
@@ -18,13 +19,19 @@ class OrdersAdapter(): RecyclerView.Adapter<OrdersHolder>() {
 
 //    private val productList: List<OrderDada> = listOf()
 //    private val orders: MutableList<OrdersData> = mutableListOf(OrdersData(2, "Vasya", productList))
-    private val orders: MutableList<OrdersData> = mutableListOf()
+//    private val orders: MutableList<OrdersData> = mutableListOf()
+private val orders: MutableList<GetTestData> = mutableListOf()
 
-    fun setOrders(ordersList: List<OrdersData>) {
-        this.orders.clear()
-        this.orders.addAll(ordersList)
-        notifyDataSetChanged()
-    }
+//    fun setOrders(ordersList: List<OrdersData>) {
+//        this.orders.clear()
+//        this.orders.addAll(ordersList)
+//        notifyDataSetChanged()
+//    }
+fun setOrders(ordersList: List<GetTestData>) {
+    this.orders.clear()
+    this.orders.addAll(ordersList)
+    notifyDataSetChanged()
+}
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): OrdersHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_order, parent, false)
@@ -39,21 +46,25 @@ class OrdersAdapter(): RecyclerView.Adapter<OrdersHolder>() {
 }
 
 class OrdersHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    fun bind(ordersData: OrdersData) {
-        itemView.textViewName.text = ordersData.name
-        itemView.textViewDate.text = "Дата отправки: "+ordersData.date
-        itemView.textViewStatus.text = ordersData.status
+    fun bind(ordersData: GetTestData) {
+//        itemView.textViewName.text = ordersData.name
+        itemView.textViewName.text = "Поставщик 1"
+//        itemView.textViewDate.text = "Дата отправки: "+ordersData.date
+        itemView.textViewDate.text = "Дата отправки: 12:22 13.02.2019"
+//        itemView.textViewStatus.text = ordersData.status
+        itemView.textViewStatus.text = "В обработке"
         var products: String = ""
         var value: String = ""
         var price: String = ""
-        for (i in 0 until ordersData.products.size) {
-            products += ordersData.products[i].product + "\n"
-            value += ordersData.products[i].value.toString() + "шт\n"
-            price += ordersData.products[i].price + "руб\n"
-        }
+//        for (i in 0 until ordersData.products.size) {
+//            products += ordersData.products[i].product + "\n"
+//            value += ordersData.products[i].value.toString() + "шт\n"
+//            price += ordersData.products[i].price + "руб\n"
+//        }
         itemView.productsText.text = products
         itemView.valueText.text = value
-        if (ordersData.status.equals("Принят")) {
+        if (itemView.textViewStatus.text.equals("Принят") ) {
+//        if (ordersData.status.equals("Принят")) {
             itemView.priceText.text = price
             itemView.textViewStatus.setTextColor(Color.rgb(5, 166, 45))
         }

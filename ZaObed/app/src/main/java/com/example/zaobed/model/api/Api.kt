@@ -1,5 +1,6 @@
 package com.example.zaobed.model.api
 
+import com.example.zaobed.model.response.GetTestData
 import com.example.zaobed.model.response.OrdersData
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -11,9 +12,18 @@ import retrofit2.http.POST
 
 interface Api {
 
-    @GET("getorders")
+//    @GET("/orders")
+//    fun getAllOrders(): Call<List<OrdersData>>
+//
+//    @POST("/add")
+//    fun postOrder(@Body request: RequestBody): Call<Boolean>
+
+    @GET("/orders")
+    fun getAllOrders2(): Call<List<GetTestData>>
+
+    @GET("/orders")
     fun getAllOrders(): Call<List<OrdersData>>
 
-    @POST("postorder")
+    @POST("/add")
     fun postOrder(@Body request: RequestBody): Call<Boolean>
 }

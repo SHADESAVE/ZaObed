@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.widget.*
+import com.example.zaobed.MainActivity
 import com.example.zaobed.R
 import com.example.zaobed.model.response.OrderDada
 import com.example.zaobed.presenter.OrdersPresenter
@@ -16,7 +18,14 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
+
+
 class RequestFragment: Fragment(){
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     var name: String = ""
 
@@ -38,6 +47,10 @@ class RequestFragment: Fragment(){
         val view = inflater.inflate(R.layout.fragment_request, container, false)
         val button: Button = view.findViewById(R.id.buttonSend)
         val spinner: Spinner = view.findViewById(R.id.spinner)
+
+        (activity as MainActivity).supportActionBar!!.title = "Создать заказ"
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         val itemList = arrayOf("Поставщик Василий", "Поставщик Виталий", "Поставщик Володя")
         val arrayAdapter = ArrayAdapter(context!!, R.layout.spinner_item, itemList)
@@ -91,5 +104,8 @@ class RequestFragment: Fragment(){
         return view
     }
 
-
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        menu!!.findItem(R.id.action_fav).isVisible = false
+        super.onPrepareOptionsMenu(menu)
+    }
 }

@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.example.zaobed.App
 import com.example.zaobed.R
 import com.example.zaobed.model.api.Api
+import com.example.zaobed.model.response.GetTestData
 import com.example.zaobed.model.response.OrderDada
 import com.example.zaobed.model.response.OrdersData
 import okhttp3.MediaType
@@ -27,8 +28,7 @@ class OrdersPresenter() {
     fun bindView(view: OrdersView, context: Context) {
         this.context = context
         this.view = view
-//        updateOrders()
-        updaOrd()
+        updateOrders2()
     }
 
     private fun updateOrders() {
@@ -54,8 +54,35 @@ class OrdersPresenter() {
                     val ordersList = response.body()
 
                     if (ordersList != null) {
-                        view?.showOrders(ordersList!!)
+                        //view?.showOrders(ordersList!!)
                     }
+                    dialog.dismiss()
+                }
+            })
+    }
+
+    private fun updateOrders2() {
+
+        val dialog = createDialog()
+        dialog.show()
+
+        val app = App()
+        app.create()
+            .getAllOrders2()
+            .enqueue(object : Callback<List<GetTestData>> {
+                override fun onFailure(call: Call<List<GetTestData>>, t: Throwable) {
+
+                    dialog.dismiss()
+                    val toast = Toast.makeText(
+                        context,
+                        "Ошибка соединения с сервером.", Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                }
+
+                override fun onResponse(call: Call<List<GetTestData>>, response: Response<List<GetTestData>>) {
+                    val ordersList = response.body()
+                    //view?.showOrders(ordersList!!)
                     dialog.dismiss()
                 }
             })
@@ -116,7 +143,7 @@ class OrdersPresenter() {
             OrdersData(3, "Поставщик Продуктов", "11:10 04.03.2020", "В обработке", productList3),
             OrdersData(0, "Поставщик Которого-Нет-И-Не-Будет", "20:21 10.10.2020", "В обработке",productList4)
         )
-        view?.showOrders(OrdersList)
+        //view?.showOrders(OrdersList)
     }
 
     fun postOrder(jsonObject: JSONObject, context: Context) {

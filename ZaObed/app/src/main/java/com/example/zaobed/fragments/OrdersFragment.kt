@@ -6,11 +6,14 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import com.example.zaobed.App
+import com.example.zaobed.MainActivity
 import com.example.zaobed.R
 import com.example.zaobed.OrdersAdapter
+import com.example.zaobed.model.response.GetTestData
 import com.example.zaobed.model.response.OrderDada
 import com.example.zaobed.model.response.OrdersData
 import com.example.zaobed.presenter.OrdersPresenter
@@ -41,6 +44,9 @@ class OrdersFragment: Fragment(), OrdersView{
         val recyclerView: RecyclerView = view.findViewById(R.id.order_recycler_view) as RecyclerView
 //        val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_container)
 
+
+        (activity as MainActivity).supportActionBar!!.title = "Список заказов"
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
         fab.setOnClickListener { _ ->
             activity!!.supportFragmentManager.beginTransaction().replace(
@@ -77,7 +83,10 @@ class OrdersFragment: Fragment(), OrdersView{
         return view
     }
 
-    override fun showOrders(ordersList: List<OrdersData>) {
+//    override fun showOrders(ordersList: List<OrdersData>) {
+//        adapter.setOrders(ordersList)
+//    }
+    override fun showOrders2(ordersList: List<GetTestData>) {
         adapter.setOrders(ordersList)
     }
 }
