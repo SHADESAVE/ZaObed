@@ -1,36 +1,39 @@
 package com.example.zaobed
 
+import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.zaobed.model.response.GetOrdersData
 import kotlinx.android.synthetic.main.recycler_view_order.view.*
 
-const val EMPTY_SPACE = ""
-
-class OrdersAdapter(): RecyclerView.Adapter<OrdersHolder>() {
+class TabAdapter(): RecyclerView.Adapter<MyHolder>() {
+    lateinit var context: Context
     private val orders: MutableList<GetOrdersData> = mutableListOf()
-    fun setOrders(ordersList: List<GetOrdersData>) {
+    fun setOrders(ordersList: List<GetOrdersData>, contex: Context) {
         this.orders.clear()
         this.orders.addAll(ordersList)
+        this.context = contex
+        Log.d("ordersList: ", "$context")
         notifyDataSetChanged()
     }
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): OrdersHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_order, parent, false)
-        return OrdersHolder(itemView)
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyHolder {
+        val itemView = LayoutInflater.from(context).inflate(R.layout.recycler_view_order, p0, false)
+        return MyHolder(itemView)
     }
-    override fun getItemCount() = orders.size
-    override fun onBindViewHolder(holder: OrdersHolder, position: Int) {
-        holder.bind(orders[position])
+    override fun getItemCount(): Int = orders.size
+    override fun onBindViewHolder(p0: MyHolder, p1: Int) {
+        p0.bind(orders[p1])
     }
 }
-class OrdersHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class MyHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     fun bind(ordersData: GetOrdersData) {
         itemView.textViewName.text = "Поставщик 1"
         itemView.textViewDate.text = "Дата отправки: 12:22 13.02.2019"
-        itemView.textViewStatus.text = "В обработке"
+        //itemView.textViewStatus.text = "В обработке"
         val products: String = EMPTY_SPACE
         val value: String = EMPTY_SPACE
         val price: String = EMPTY_SPACE
@@ -41,6 +44,14 @@ class OrdersHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 //        }
         itemView.productsText.text = products
         itemView.valueText.text = value
+        if (ordersData.status) {
+            itemView.textViewStatus.text = "Принят"
+            itemView.textViewStatus.setTextColor(Color.rgb(5, 166, 45))
+        } else {
+            itemView.textViewStatus.text = "В обработке"
+            itemView.textViewStatus.setTextColor(Color.rgb(207, 6, 6))
+        }
+
         if (itemView.textViewStatus.text == "Принят") {
 //        if (ordersData.status.equals("Принят")) {
             itemView.priceText.text = price

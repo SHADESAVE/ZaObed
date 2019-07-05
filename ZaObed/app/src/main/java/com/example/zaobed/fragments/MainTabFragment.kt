@@ -3,27 +3,25 @@ package com.example.zaobed.fragments
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.zaobed.activity.MainActivity
 import com.example.zaobed.R
-import com.example.zaobed.OrdersAdapter
+import com.example.zaobed.TabAdapter
+import com.example.zaobed.ViewPagerAdapter
+import com.example.zaobed.activity.MainActivity
 import com.example.zaobed.model.response.GetOrdersData
 import com.example.zaobed.presenter.OrdersPresenter
 import com.example.zaobed.presenter.OrdersView
-import kotlinx.android.synthetic.main.fragment_orders.*
-import kotlinx.android.synthetic.main.fragment_orders.view.*
+import kotlinx.android.synthetic.main.fragment_orders2.view.*
 
-
-class OrdersFragment: Fragment(), OrdersView{
-
-    private val adapter = OrdersAdapter()
+class MainTabFragment: Fragment(), OrdersView {
     private val presenter = OrdersPresenter()
+    private val tabFragment1 = TabFragment1()
+    private val tabFragment2 = TabFragment2()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +37,10 @@ class OrdersFragment: Fragment(), OrdersView{
         }
         else -> super.onOptionsItemSelected(item)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_orders, container, false)
+        val view = inflater.inflate(R.layout.fragment_orders2, container, false)
+        val adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
         val fab: View = view.findViewById(R.id.fab_button)
         val builder = AlertDialog.Builder(context!!)
         builder.setView(R.layout.progress_dialog)
@@ -52,33 +52,31 @@ class OrdersFragment: Fragment(), OrdersView{
         (activity as MainActivity).supportActionBar!!.title = "Список заказов"
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
 
-        view.order_recycler_view.adapter = adapter
-        view.order_recycler_view.layoutManager = LinearLayoutManager(context)
-        view.order_recycler_view.setHasFixedSize(true)
-        view.order_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0 || dy < 0 && fab_button.isShown)
-                    fab.visibility = View.INVISIBLE
-            }
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    fab.visibility = View.VISIBLE
-                super.onScrollStateChanged(recyclerView, newState)
-            }
-        })
+        view.view_pager.adapter = adapter
+        adapter.addFragment(tabFragment1, "В обработке")
+        adapter.addFragment(tabFragment2, "Принятые")
+        view.tab_layout_id.setupWithViewPager(view.view_pager)
         fab.setOnClickListener {
             presenter.onClickFab()
         }
         return view
     }
-
     override fun showOrders(ordersList: List<GetOrdersData>) {
-        adapter.setOrders(ordersList)
+        val trueList = mutableListOf<GetOrdersData>()
+        val falseList = mutableListOf<GetOrdersData>()
+        for (i in 0 until ordersList.size) {
+            if (ordersList[i].status)
+                trueList.add(ordersList[i])
+            else
+                falseList.add(ordersList[i])
+        }
+        tabFragment1.addList(falseList, context!!)
+        tabFragment2.addList(trueList, context!!)
     }
     override fun changeFragment() {
         activity!!.supportFragmentManager.beginTransaction().replace(
-                R.id.fragment_container,
-                RequestFragment()
+            R.id.fragment_container,
+            RequestFragment()
         ).addToBackStack(null).commit()
     }
     override fun showMessage(message: String) {

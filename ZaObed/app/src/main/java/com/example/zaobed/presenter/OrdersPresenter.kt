@@ -1,70 +1,63 @@
 package com.example.zaobed.presenter
 
-import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.widget.Toast
-import com.example.zaobed.R
-import com.example.zaobed.model.response.GetTestData
-import com.example.zaobed.model.response.OrderDada
-import com.example.zaobed.model.response.OrdersData
-import com.google.gson.Gson
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import org.json.JSONObject
+import com.example.zaobed.App
+import com.example.zaobed.model.api.Api
+import com.example.zaobed.model.response.GetOrdersData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 class OrdersPresenter() {
-
     private lateinit var view: OrdersView
-
     fun bindView(view: OrdersView) {
         this.view = view
-        postOrder()
     }
 
-    private fun updateOrders() {
-        val app = App()
-        app
-            .create()
-            .getAllOrders()
-            .enqueue(object : Callback<List<GetTestData>> {
-                override fun onFailure(call: Call<List<GetTestData>>, t: Throwable) {
-                }
+    fun updateOrders(builder: AlertDialog.Builder) {
+        val dialog = builder.create()
+        dialog.show()
 
-                override fun onResponse(call: Call<List<GetTestData>>, response: Response<List<GetTestData>>) {
+        App.retrofit
+            .create(Api::class.java)
+            .getAllOrders()
+            .enqueue(object : Callback<List<GetOrdersData>> {
+                override fun onFailure(call: Call<List<GetOrdersData>>, t: Throwable) {
+                    dialog.dismiss()
+                    //////////////////
+                    val oList = listOf(
+                        GetOrdersData("product1", false, 2),
+                        GetOrdersData("product2", true, 2),
+                        GetOrdersData("product3", true, 2),
+                        GetOrdersData("product4", false, 2),
+                        GetOrdersData("product5", false, 2)
+                    )
+                    view.showOrders(oList)
+//////////////////
+                    view.showMessage("Ошибка соединения с сервером")
+
+                }
+                override fun onResponse(call: Call<List<GetOrdersData>>, response: Response<List<GetOrdersData>>) {
+                    dialog.dismiss()
                     val ordersList = response.body()
-                    view.showOrders(ordersList!!)
+                    Log.d("ordersList", "$ordersList")
+//////////////////
+                    val oList = listOf(
+                        GetOrdersData("product1", false, 2),
+                        GetOrdersData("product2", true, 2),
+                        GetOrdersData("product3", true, 2),
+                        GetOrdersData("product4", false, 2),
+                        GetOrdersData("product5", false, 2)
+                        )
+                    view.showOrders(oList)
+//////////////////
+                    if(ordersList != null)
+                        view.showOrders(ordersList!!)
                 }
             })
     }
-
-    fun postOrder() {
-        val test : String = "{\"name\":\"Поставщик Вася\",\"date\":\"тут дата\",\"status\":\"отправлено\"}"
-        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), test.toString())
-        Log.d("for post: ", "$requestBody")
-
-        val gson = Gson()
-        val test2 = gson.fromJson(test, OrdersData::class.java)
-        Log.d("for post: ", "$test2")
-
-        val app = App()
-        app
-            .create()
-            .postOrder(requestBody)
-            .enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                }
-
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                }
-        })
-    }
-
     fun onClickFab() {
         view.changeFragment()
     }

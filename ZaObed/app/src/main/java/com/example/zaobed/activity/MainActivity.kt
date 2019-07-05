@@ -3,9 +3,11 @@ package com.example.zaobed.activity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import com.example.zaobed.R
+import com.example.zaobed.fragments.MainTabFragment
 import com.example.zaobed.fragments.OrdersFragment
-
 
 
 
@@ -18,7 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(
             R.id.fragment_container,
-            OrdersFragment()
+            //OrdersFragment()
+            MainTabFragment()
         ).commit()
     }
 
